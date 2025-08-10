@@ -1,3 +1,19 @@
+console.log('Script loaded');
+window.gapiReady = false;
+
+const script = document.createElement('script');
+script.src = "https://apis.google.com/js/api.js";
+script.onload = () => {
+  console.log('Google API script loaded');
+  window.gapiReady = true;
+  handleClientLoad();
+};
+script.onerror = () => {
+  console.error('Failed to load Google API script');
+};
+document.body.appendChild(script);
+
+
 const CLIENT_ID = '782665665648-lfegea941i066mqr21iog7qukoi4fv0p.apps.googleusercontent.com';
 const API_KEY = ''; // No API key needed for this example
 
