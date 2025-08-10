@@ -1,32 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rental Utility Reader</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
-</head>
+<head><title>Test Google API</title></head>
 <body>
-  <h1>Rental Utility Reader</h1>
-
   <button id="authorize-button">Connect to Gmail</button>
-  <button id="signout-button" style="display:none;">Sign Out</button>
-
-  <div id="content" style="display:none;">
-    <h2>Utility Bill Emails</h2>
-    <table id="emails-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Subject</th>
-          <th>Snippet</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-
-  <script src="script.js"></script>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script>
+    const authorizeButton = document.getElementById('authorize-button');
+    authorizeButton.onclick = () => alert('Clicked!');
+  </script>
 </body>
 </html>
