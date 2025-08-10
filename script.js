@@ -10,6 +10,7 @@ const content = document.getElementById('content');
 const emailsTableBody = document.querySelector('#emails-table tbody');
 
 function updateSigninStatus(isSignedIn) {
+  console.log('Sign-in status changed:', isSignedIn);
   if (isSignedIn) {
     authorizeButton.style.display = 'none';
     signoutButton.style.display = 'inline-block';
@@ -23,35 +24,57 @@ function updateSigninStatus(isSignedIn) {
 }
 
 function handleClientLoad() {
+  console.log('Loading gapi client');
   gapi.load('client:auth2', initClient);
 }
 
 function initClient() {
+  console.log('Initializing gapi client');
   gapi.client.init({
     apiKey: API_KEY,
     clientId: CLIENT_ID,
     discoveryDocs: DISCOVERY_DOCS,
     scope: SCOPES
   }).then(() => {
+    const authInstance = gapi.auth2.getAuthInstance();
+
     // Listen for sign-in state changes.
-    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+    authInstance.isSignedIn.listen(updateSigninStatus);
 
     // Handle the initial sign-in state.
-    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+    updateSigninStatus(authInstance.isSignedIn.get());
 
-    authorizeButton.onclick = () => gapi.auth2.getAuthInstance().signIn();
-    signoutButton.onclick = () => gapi.auth2.getAuthInstance().signOut();
+    // Button click handlers
+    if (authorizeButton) {
+      authorizeButton.onclick = () => {
+        console.log('Authorize button clicked');
+        authInstance.signIn().catch(err => {
+          console.error('Sign-in error:', err);
+        });
+      };
+    } else {
+      console.warn('Authorize button not found');
+    }
+
+    if (signoutButton) {
+      signoutButton.onclick = () => {
+        console.log('Signout button clicked');
+        authInstance.signOut();
+      };
+    } else {
+      console.warn('Signout button not found');
+    }
+
   }, (error) => {
-    console.error(JSON.stringify(error, null, 2));
+    console.error('gapi.client.init error:', JSON.stringify(error, null, 2));
   });
 }
 
 function listUtilityEmails() {
   emailsTableBody.innerHTML = '<tr><td colspan="3">Loading emails...</td></tr>';
-
   gapi.client.gmail.users.messages.list({
     userId: 'me',
-    q: 'subject:"utility bill" newer_than:90d', // Last 90 days utility bill emails
+    q: 'subject:"utility bill" newer_than:90d',
     maxResults: 20
   }).then(response => {
     const messages = response.result.messages || [];
@@ -84,7 +107,14 @@ function listUtilityEmails() {
 }
 
 // Load the Google API script dynamically and then initialize client
+console.log('Adding Google API script to page');
 const script = document.createElement('script');
 script.src = "https://apis.google.com/js/api.js";
-script.onload = handleClientLoad;
+script.onload = () => {
+  console.log('Google API script loaded');
+  handleClientLoad();
+};
+script.onerror = () => {
+  console.error('Failed to load Google API script');
+};
 document.body.appendChild(script);
