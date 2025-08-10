@@ -1,12 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head><title>Test Google API</title></head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rental Finance — Local App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
 <body>
-  <button id="authorize-button">Connect to Gmail</button>
-  <script src="https://apis.google.com/js/api.js"></script>
-  <script>
-    const authorizeButton = document.getElementById('authorize-button');
-    authorizeButton.onclick = () => alert('Clicked!');
-  </script>
+  <header>
+    <h1>Rental Finance</h1>
+    <div class="top-actions">
+      <button id="btn-export">Export CSV</button>
+      <button id="btn-apply-recurring">Apply Recurring Now</button>
+      <button id="btn-import-gmail" title="Requires hosting & Google Client ID">Import utility bills (Gmail)</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Add Manual Expense</h2>
+      <form id="manual-form">
+        <label>Date <input type="date" id="manual-date" required></label>
+        <label>Category
+          <select id="manual-category">
+            <option>Utilities</option>
+            <option>Repairs</option>
+            <option>Maintenance</option>
+            <option>Insurance</option>
+            <option>Taxes</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Description <input id="manual-desc" placeholder="e.g., fix leak" required></label>
+        <label>Amount <input id="manual-amount" type="number" step="0.01" required></label>
+        <div><button type="submit">Add Expense</button></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Add Recurring Expense</h2>
+      <form id="recurring-form">
+        <label>Start Date <input type="date" id="rec-start" required></label>
+        <label>Frequency
+          <select id="rec-frequency">
+            <option value="monthly">Monthly</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </label>
+        <label>Category <input id="rec-category" value="Insurance"></label>
+        <label>Description <input id="rec-desc" placeholder="e.g., Condo insurance"></label>
+        <label>Amount <input id="rec-amount" type="number" step="0.01" required></label>
+        <div><button type="submit">Save Recurring</button></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Expenses</h2>
+      <input id="filter-text" placeholder="Filter description or category" />
+      <table id="expenses-table">
+        <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Source</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="card" id="dashboard">
+      <h2>Dashboard</h2>
+      <div id="monthly-summary"></div>
+      <canvas id="chart" width="400" height="200"></canvas>
+    </section>
+  </main>
+
+  <footer>
+    <small>Data saved locally in your browser. To enable Gmail import, host this folder on HTTPS and set your Google Client ID in <code>config.js</code>.</small>
+  </footer>
+
+  <!-- Config: paste your CLIENT_ID here when hosting -->
+  <script src="config.js"></script>
+
+  <!-- Google API loader is only loaded when hosted and CLIENT_ID present -->
+  <script src="app.js"></script>
+
+  <!-- Chart.js from CDN for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
