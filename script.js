@@ -40,11 +40,13 @@ function updateSigninStatus(isSignedIn) {
 }
 
 function handleClientLoad() {
+  alert('handleClientLoad called');
   console.log('Loading gapi client');
   gapi.load('client:auth2', initClient);
 }
 
 function initClient() {
+  alert('initClient called');
   console.log('Initializing gapi client');
   gapi.client.init({
     apiKey: API_KEY,
